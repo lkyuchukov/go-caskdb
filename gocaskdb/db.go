@@ -15,6 +15,7 @@ type DB struct {
 	encoder       *Encoder
 }
 
+// KeyEntry keeps metadata about the key-value pair.
 type KeyEntry struct {
 	timestamp int
 	position  int
@@ -28,8 +29,8 @@ type KeyValuePair struct {
 }
 
 const (
-	HeaderSize    = 12
-	DefaultWhence = 0
+	// The header consists of three fields - timestamp, keySize and valueSize. Each of these is 4 bytes.
+	HeaderSize = 12
 )
 
 // InitDB initializes a DB object.
@@ -62,7 +63,7 @@ func (db *DB) Get(k string) string {
 	}
 
 	if db.isNew {
-		_, err := db.file.Seek(int64(e.position), DefaultWhence)
+		_, err := db.file.Seek(int64(e.position), 0)
 		if err != nil {
 			log.Fatalln("err when setting read offset: ", err)
 		}

@@ -7,6 +7,7 @@ import (
 
 type Encoder struct{}
 
+// EncodeKV encodes a timestamp, key and value into a byte array.
 func (e *Encoder) EncodeKV(ts int, k string, v string) (int, []byte) {
 	buf := new(bytes.Buffer)
 
@@ -23,6 +24,7 @@ func (e *Encoder) EncodeKV(ts int, k string, v string) (int, []byte) {
 	return HeaderSize + len(keyBytes) + len(valBytes), buf.Bytes()
 }
 
+// DecodeKV decodes the byte array into a KeyValuePair.
 func (e *Encoder) DecodeKV(b []byte) KeyValuePair {
 	ts, keySize, _ := e.DecodeHeader(b)
 
@@ -33,6 +35,7 @@ func (e *Encoder) DecodeKV(b []byte) KeyValuePair {
 	return kv
 }
 
+// DecodeHeader decodes a byte array into timestamp, key size and value size.
 func (e *Encoder) DecodeHeader(b []byte) (uint32, uint32, uint32) {
 	ts := binary.LittleEndian.Uint32(b[:4])
 	keySize := binary.LittleEndian.Uint32(b[4:8])
